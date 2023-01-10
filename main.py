@@ -9,11 +9,13 @@ class FileConvertor:
         self.command_type = ["wordtopdf","mergepdf","exceltopdf"]
         self.user_command = ""
         self.destination_path = ""
-
+    
+    #converts word documents into pdf files
     def word_to_pdf(self,file_name):
         final_path = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop', file_name)
         convert(final_path)
-
+    
+    #converts excel documents into pdf files
     def excel_to_pdf(self,file_name):
         final_path = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop', file_name)
         excel = client.Dispatch("Excel.Application")
@@ -21,7 +23,8 @@ class FileConvertor:
         work_sheets = sheets.Worksheets[0]
         work_sheets.ExportAsFixedFormat(0, os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop', "convertedExcelSheet"))
         sheets.Close(True)
-
+        
+    #merges pdf files in a folder into one pdf file
     def merge_pdf(self,folder_path):
         folder_dir = (Path.home()/ "Desktop"/ folder_path)
         pdf_merger = PdfFileMerger(strict=False)
@@ -31,7 +34,8 @@ class FileConvertor:
             pdf_merger.append(str(file))
         with Path(Path.home()/"Desktop"/"MergedFiles.pdf").open(mode = "wb") as output_file:
             pdf_merger.write(output_file)
-
+    
+    #finds what command the user wants to use
     def obtain_user_command(self):
         while True:
             print("COMMANDS AVAILABLE:")
@@ -44,7 +48,8 @@ class FileConvertor:
                 print("\nInvalid command please refer to available commands shown below\n")
                 continue
         self.user_command = user_request
-
+    
+    #obtains the path to the desktop and calls respective command/instruction to process
     def obtain_path(self):
         while True:
             if(self.user_command == "mergepdf"):
